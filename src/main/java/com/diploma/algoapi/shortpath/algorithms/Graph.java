@@ -5,13 +5,20 @@ import java.util.Set;
 
 public class Graph {
 
-    private final Set<Node> nodes = new HashSet<>();
+    private Set<Node> nodes = new HashSet<>();
 
     public void addNode(Node nodeA) {
         nodes.add(nodeA);
     }
 
+    //getters, setters
+
+
     public Set<Node> getNodes() {
         return nodes;
+    }
+
+    public void setNodes(Set<Node> nodes) {
+        this.nodes = nodes;
     }
 }

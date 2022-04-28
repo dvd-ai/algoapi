@@ -12,6 +12,8 @@ public class AlgoapiApplication {
     public static void main(String[] args) {
         SpringApplication.run(AlgoapiApplication.class, args);
 
+        //https://www.baeldung.com/java-dijkstra
+
         Node nodeA = new Node("A");
         Node nodeB = new Node("B");
         Node nodeC = new Node("C");
@@ -41,7 +43,7 @@ public class AlgoapiApplication {
         graph.addNode(nodeE);
         graph.addNode(nodeF);
 
-        Dijkstra.calculateShortestPathFromSource(graph, nodeA);
+        Dijkstra.calculateShortestPathFromSource(nodeA);
         System.out.println(nodeF.getDistance());
         nodeF.getShortestPath().forEach(node -> System.out.println(node.getName()));
     }
