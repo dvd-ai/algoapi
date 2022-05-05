@@ -1,8 +1,8 @@
 package com.diploma.algoapi;
 
-import com.diploma.algoapi.shortpath.algorithms.Dijkstra;
-import com.diploma.algoapi.shortpath.algorithms.Graph;
-import com.diploma.algoapi.shortpath.algorithms.Node;
+import com.diploma.algoapi.shortpath.algorithms.dijkstra.Dijkstra;
+import com.diploma.algoapi.shortpath.algorithms.dijkstra.Graph;
+import com.diploma.algoapi.shortpath.algorithms.dijkstra.Node;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

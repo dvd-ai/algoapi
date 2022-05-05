@@ -1,4 +1,4 @@
-package com.diploma.algoapi.shortpath.algorithms;
+package com.diploma.algoapi.shortpath.algorithms.dijkstra;
 
 import java.util.HashSet;
 import java.util.LinkedList;
