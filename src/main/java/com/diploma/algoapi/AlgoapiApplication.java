@@ -43,9 +43,11 @@ public class AlgoapiApplication {
         graph.addNode(nodeE);
         graph.addNode(nodeF);
 
+        //check existence of negative edge weights
         Dijkstra.calculateShortestPathFromSource(nodeA);
         System.out.println(nodeF.getDistance());
         nodeF.getShortestPath().forEach(node -> System.out.println(node.getName()));
+
     }
 
 }
