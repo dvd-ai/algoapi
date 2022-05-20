@@ -32,7 +32,7 @@ public class FloydWarshallMatrices {
    * @param dest the destination node name
    * @return the cost from source to destination node
    */
-  public int getCost(String source, String dest) {
+  public int getDistance(String source, String dest) {
     return distances[nodeNameToIndex.get(source)][nodeNameToIndex.get(dest)];
   }
 
@@ -48,7 +48,6 @@ public class FloydWarshallMatrices {
       int i = nodeNameToIndex.get(source);
       int j = nodeNameToIndex.get(dest);
 
-      // Check for -1 in case there's no path from source to dest
       if (paths[i][j] == -1) {
             return Optional.empty();
       }

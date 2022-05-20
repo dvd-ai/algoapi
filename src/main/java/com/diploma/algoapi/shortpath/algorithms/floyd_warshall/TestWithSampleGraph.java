@@ -25,6 +25,7 @@ import com.google.common.graph.ValueGraphBuilder;
  */
 public class TestWithSampleGraph {
   public static void main(String[] args) {
+//    System.out.println(Integer.MAX_VALUE + Integer.MAX_VALUE - 1);
     ValueGraph<String, Integer> graph = createSampleGraph();
     FloydWarshall.findShortestPaths(graph).getPath("D", "B")
             .get().forEach(System.out::println);

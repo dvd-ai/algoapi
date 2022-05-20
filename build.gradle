@@ -15,7 +15,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'com.google.guava:guava:23.0'
+    implementation 'com.google.guava:guava:31.1-jre'
 
 }
 

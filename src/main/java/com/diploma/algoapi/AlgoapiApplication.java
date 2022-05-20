@@ -14,6 +14,9 @@ public class AlgoapiApplication {
 
         //https://www.baeldung.com/java-dijkstra
 
+        //https://www.programiz.com/dsa/bellman-ford-algorithm
+        //https://www.happycoders.eu/algorithms/bellman-ford-algorithm-java/
+
         Node nodeA = new Node("A");
         Node nodeB = new Node("B");
         Node nodeC = new Node("C");
@@ -43,7 +46,9 @@ public class AlgoapiApplication {
         graph.addNode(nodeE);
         graph.addNode(nodeF);
 
+        //validators: sum of all edge weights shouldn't exceed INTEGER_MAX_VALUE
         //check existence of negative edge weights
+
         Dijkstra.calculateShortestPathFromSource(nodeA);
         System.out.println(nodeF.getDistance());
         nodeF.getShortestPath().forEach(node -> System.out.println(node.getName()));

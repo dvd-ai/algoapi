@@ -1,8 +1,10 @@
-package com.diploma.algoapi.shortpath.algorithms.floyd_warshall;
+package com.diploma.algoapi.shortpath.algorithms.bellman_ford;
 
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+
+import java.util.List;
 
 /**
  * Tests the implementation of the Bellman Ford Algorithm using the following sample graph:
@@ -24,22 +26,23 @@ import com.google.common.graph.ValueGraphBuilder;
  * @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
 @SuppressWarnings({"squid:S106", "PMD.SystemPrintln"}) // System.out is OK in this test program
-public class TestWithSampleGraphFromBellmanFord {
+public class TestWithSampleGraph {
   public static void main(String[] args) {
     ValueGraph<String, Integer> graph = createSampleGraph();
 
     System.out.println("graph = " + graph);
 
-    findAndPrintShortestPaths(graph);
+    findAndPrintShortestPath(graph, "A");
+    findAndPrintShortestPath(graph, "C");
   }
 
-  private static void findAndPrintShortestPaths(ValueGraph<String, Integer> graph) {
-    FloydWarshallMatrices shortestPaths = FloydWarshall.findShortestPaths(graph);
-    System.out.println("\nCosts of shortest paths:");
-    shortestPaths.print();
+  private static void findAndPrintShortestPath(
+      ValueGraph<String, Integer> graph, String source) {
+    List<Path> shortestPath = BellmanFord.findShortestPath(graph, source);
 
-    System.out.println("\nShortest path from A to F: " + shortestPaths.getPath("A", "F"));
-    System.out.println("Cost of shortest path:     " + shortestPaths.getDistance("A", "F"));
+    shortestPath.forEach(e -> System.out.println(e.getSource() + "->" + e.getDestination() + "=" + e.getTotalCost() + "; path = " + e.getRoute()));
+    System.out.println("-----------------------");
+//    System.out.printf("shortestPath from %s to %s = %s%n", source, target, shortestPath);
   }
 
   private static ValueGraph<String, Integer> createSampleGraph() {
