@@ -52,7 +52,7 @@ public class HeuristicForNodesWithXYCoordinates implements Function<NodeWithXYCo
       ValueGraph<NodeWithXYCoordinates, Double> graph, EndpointPair<NodeWithXYCoordinates> edge) {
     double euclideanDistance = calculateEuclideanDistance(edge.nodeU(), edge.nodeV());
     double cost =
-        graph.edgeValue(edge).orElseThrow(() -> new IllegalArgumentException("Graph is empty"));
+        graph.edgeValue(edge).orElseThrow(() -> new IllegalArgumentException("A*:  Graph is empty"));
 
     return euclideanDistance / cost;
   }

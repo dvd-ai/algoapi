@@ -4,7 +4,7 @@ package com.diploma.algoapi.shortpath.algorithms.astar;
  * Data structure containing a node, its predecessor, its total cost from the start, its minimum
  * remaining cost, and the cost sum.
  *
- * <p>Used by {@link AStarWithTreeSet}
+ * <p>Used by {@link AStar}
  *
  * @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */

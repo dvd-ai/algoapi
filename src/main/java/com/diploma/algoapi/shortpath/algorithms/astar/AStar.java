@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * @author <a href="sven@happycoders.eu">Sven Woltmann</a>
  */
-public class AStarWithTreeSet {
+public class AStar {
 
   /**
    * Finds the shortest path from {@code source} to {@code target}.
@@ -25,26 +25,31 @@ public class AStarWithTreeSet {
   public static List<NodeWithXYCoordinates> findShortestPath(
       ValueGraph<NodeWithXYCoordinates, Double> graph, NodeWithXYCoordinates source, NodeWithXYCoordinates target, Function<NodeWithXYCoordinates, Double> heuristic) {
     Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers = new HashMap<>();
-    TreeSet<AStarNodeWrapper> queue = new TreeSet<>();
+    TreeSet<AStarNodeWrapper> table = new TreeSet<>();
     Set<NodeWithXYCoordinates> shortestPathFound = new HashSet<>();
 
-    // Add source to queue
+    // Add source to table
+    //func1
     AStarNodeWrapper sourceWrapper =
         new AStarNodeWrapper(source, null, 0.0, heuristic.apply(source));
     nodeWrappers.put(source, sourceWrapper);
-    queue.add(sourceWrapper);
+    table.add(sourceWrapper);
 
-    while (!queue.isEmpty()) {
-      AStarNodeWrapper nodeWrapper = queue.pollFirst();
+    //startIterations
+    //func2
+    while (!table.isEmpty()) {
+      AStarNodeWrapper nodeWrapper = table.pollFirst();
       NodeWithXYCoordinates node = nodeWrapper.getNode();
       shortestPathFound.add(node);
 
       // Have we reached the target? --> Build and return the path
+      //stupid func3
       if (node.equals(target)) {
         return buildPath(nodeWrapper);
       }
 
       // Iterate over all neighbors
+      //func4
       Set<NodeWithXYCoordinates> neighbors = graph.adjacentNodes(node);
       for (NodeWithXYCoordinates neighbor : neighbors) {
         // Ignore neighbor if shortest path already found
@@ -53,32 +58,35 @@ public class AStarWithTreeSet {
         }
 
         // Calculate total cost from start to neighbor via current node
+        //stupid func5
         double cost = graph.edgeValue(node, neighbor).orElseThrow(IllegalStateException::new);
         double totalCostFromStart = nodeWrapper.getTotalCostFromStart() + cost;
 
-        // Neighbor not yet discovered?
+        // Neighbor not yet discovered? //(hasn't been visited, cost = infinity)
         AStarNodeWrapper neighborWrapper = nodeWrappers.get(neighbor);
         if (neighborWrapper == null) {
+          //func6
           neighborWrapper =
               new AStarNodeWrapper(
                   neighbor, nodeWrapper, totalCostFromStart, heuristic.apply(neighbor));
           nodeWrappers.put(neighbor, neighborWrapper);
-          queue.add(neighborWrapper);
+          table.add(neighborWrapper);
         }
 
         // Neighbor discovered, but total cost via current node is lower?
         // --> Update costs and predecessor
         else if (totalCostFromStart < neighborWrapper.getTotalCostFromStart()) {
+          //func7!!!!!!!!!!!!!!!
           // The position in the TreeSet won't change automatically;
           // we have to remove and reinsert the node.
           // Because TreeSet uses compareTo() to identity a node to remove,
           // we have to remove it *before* we change the cost!
-          queue.remove(neighborWrapper);
+          table.remove(neighborWrapper);
 
           neighborWrapper.setTotalCostFromStart(totalCostFromStart);
           neighborWrapper.setPredecessor(nodeWrapper);
 
-          queue.add(neighborWrapper);
+          table.add(neighborWrapper);
         }
       }
     }
@@ -88,6 +96,7 @@ public class AStarWithTreeSet {
   }
 
   private static List<NodeWithXYCoordinates> buildPath(AStarNodeWrapper nodeWrapper) {
+    //check out bellman ford to use a wrapper and to return just Path
     List<NodeWithXYCoordinates> path = new ArrayList<>();
     while (nodeWrapper != null) {
       path.add(nodeWrapper.getNode());
