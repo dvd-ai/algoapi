@@ -42,10 +42,9 @@ public class TestWithSampleGraph {
   public static void main(String[] args) {
     ValueGraph<NodeWithXYCoordinates, Double> graph = createSampleGraph();
 
-    LOG.info("graph = {}", graph);
 
     Map<String, NodeWithXYCoordinates> nodeByName = createNodeByNameMap(graph);
-
+    //нужна обертка (Path) для определения стоимости пути, сам маршрут
     findAndPrintShortestPath(graph, nodeByName.get("D"), nodeByName.get("H"));
     findAndPrintShortestPath(graph, nodeByName.get("A"), nodeByName.get("F"));
     findAndPrintShortestPath(graph, nodeByName.get("E"), nodeByName.get("H"));
@@ -98,6 +97,6 @@ public class TestWithSampleGraph {
         new HeuristicForNodesWithXYCoordinates(graph, target);
     List<NodeWithXYCoordinates> shortestPath =
         AStarWithTreeSet.findShortestPath(graph, source, target, heuristic);
-    LOG.info("shortestPath from {} to {} = {}", source, target, shortestPath);
+    System.out.printf("shortestPath from %s to %s = %s\n", source, target, shortestPath);
   }
 }

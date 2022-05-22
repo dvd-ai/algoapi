@@ -9,9 +9,6 @@ import java.util.function.Function;
 
 public class HeuristicForNodesWithXYCoordinates implements Function<NodeWithXYCoordinates, Double> {
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(HeuristicForNodesWithXYCoordinates.class);
-
   private final double maxSpeed;
   private final NodeWithXYCoordinates target;
 
@@ -56,19 +53,8 @@ public class HeuristicForNodesWithXYCoordinates implements Function<NodeWithXYCo
     double euclideanDistance = calculateEuclideanDistance(edge.nodeU(), edge.nodeV());
     double cost =
         graph.edgeValue(edge).orElseThrow(() -> new IllegalArgumentException("Graph is empty"));
-    double speed = euclideanDistance / cost;
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(
-          "Calculated speed from {} to {}: euclideanDistance = {}, cost = {} --> speed = {}",
-          edge.nodeU(),
-          edge.nodeV(),
-          euclideanDistance,
-          cost,
-          speed);
-    }
-
-    return speed;
+    return euclideanDistance / cost;
   }
 
   public static double calculateEuclideanDistance(
@@ -87,15 +73,6 @@ public class HeuristicForNodesWithXYCoordinates implements Function<NodeWithXYCo
   @Override
   public Double apply(NodeWithXYCoordinates node) {
     double euclideanDistance = calculateEuclideanDistance(node, target);
-    double minimumCost = euclideanDistance / maxSpeed;
-
-    LOG.debug(
-        "Applied heuristic to node {}: euclideanDistance = {}, maxSpeed = {} --> minimumCost = {}",
-        node,
-        euclideanDistance,
-        maxSpeed,
-        minimumCost);
-
-    return minimumCost;
+    return euclideanDistance / maxSpeed;
   }
 }
