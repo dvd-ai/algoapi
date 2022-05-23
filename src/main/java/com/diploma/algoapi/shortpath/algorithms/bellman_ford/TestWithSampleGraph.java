@@ -38,7 +38,7 @@ public class TestWithSampleGraph {
 
   private static void findAndPrintShortestPath(
       ValueGraph<String, Integer> graph, String source) {
-    List<Path> shortestPath = BellmanFord.findShortestPath(graph, source);
+    List<Path<Integer>> shortestPath = BellmanFord.findShortestPath(graph, source);
 
     shortestPath.forEach(e -> System.out.println(e.getSource() + "->" + e.getDestination() + "=" + e.getTotalCost() + "; path = " + e.getRoute()));
     System.out.println("-----------------------");

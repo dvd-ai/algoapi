@@ -2,24 +2,24 @@ package com.diploma.algoapi.shortpath.algorithms.bellman_ford;
 
 import java.util.List;
 
-public class Path {
+public class Path <N>{
     private String source;
     private String destination;
-    private int totalCost;
+    private N totalCost;
     private List<String> route;
 
-    public Path(String source, String destination, int totalCost, List<String> route) {
+    public Path(String source, String destination, N totalCost, List<String> route) {
         this.source = source;
         this.destination = destination;
         this.totalCost = totalCost;
         this.route = route;
     }
     //getters, setters
-    public int getTotalCost() {
+    public N getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(int totalCost) {
+    public void setTotalCost(N totalCost) {
         this.totalCost = totalCost;
     }
 

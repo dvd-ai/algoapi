@@ -9,7 +9,7 @@ import java.util.*;
 
 public class BellmanFord {
 
-  public static List<Path> findShortestPath(ValueGraph<String, Integer> graph, String source) {
+  public static List<Path<Integer>> findShortestPath(ValueGraph<String, Integer> graph, String source) {
     Map<String, NodeWrapper> table = initTable(graph, source);
     startIterations(graph, table);
     return buildPaths(source, table);
@@ -49,12 +49,12 @@ public class BellmanFord {
   }
 
 
-  private static List<Path> buildPaths(String source, Map<String, NodeWrapper> table) {
-    List<Path> paths = new ArrayList<>();
+  private static List<Path<Integer>> buildPaths(String source, Map<String, NodeWrapper> table) {
+    List<Path<Integer>> paths = new ArrayList<>();
 
     for (Map.Entry<String, NodeWrapper> entry : table.entrySet()) {
       paths.add(
-              new Path(
+              new Path<>(
                       source,
                       entry.getKey(),
                       entry.getValue().getTotalCostFromStart(),
