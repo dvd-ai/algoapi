@@ -112,8 +112,7 @@ public class AStar {
     );
   }
 
-  private void addSource()
-  {
+  private void addSource() {
     AStarNodeWrapper sourceWrapper =
             new AStarNodeWrapper(source, null, 0.0, heuristic.apply(source));
     nodeWrappers.put(source, sourceWrapper);
