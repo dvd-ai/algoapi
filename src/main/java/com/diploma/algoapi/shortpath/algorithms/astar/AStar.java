@@ -6,80 +6,80 @@ import com.google.common.graph.ValueGraph;
 import java.util.*;
 import java.util.function.Function;
 
+@SuppressWarnings("ALL")
 public class AStar {
 
-  public static Path<Double> findShortestPath(
-      ValueGraph<NodeWithXYCoordinates, Double> graph, NodeWithXYCoordinates source,
-      NodeWithXYCoordinates target, Function<NodeWithXYCoordinates, Double> heuristic
-  ) {
+  private final Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers = new HashMap<>();
+  private final TreeSet<AStarNodeWrapper> table = new TreeSet<>();
+  private final Set<NodeWithXYCoordinates> foundShortestPaths = new HashSet<>();
 
-    Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers = new HashMap<>();
-    TreeSet<AStarNodeWrapper> table = new TreeSet<>();
-    Set<NodeWithXYCoordinates> foundShortestPats = new HashSet<>();//To be able to check whether we have already processed a node, i.e., found the shortest path to it, we create a HashSet:
+  private final ValueGraph<NodeWithXYCoordinates, Double> graph;
+  private final NodeWithXYCoordinates source;
+  private final NodeWithXYCoordinates target;
+  private final Function<NodeWithXYCoordinates, Double> heuristic;
 
-    addSource(nodeWrappers, table, source, heuristic);
-    return startIterations(graph, table, foundShortestPats, nodeWrappers, heuristic, source, target);
+  public AStar(ValueGraph<NodeWithXYCoordinates, Double> graph,
+               NodeWithXYCoordinates source,
+               NodeWithXYCoordinates target,
+               Function<NodeWithXYCoordinates, Double> heuristic) {
+    
+    this.graph = graph;
+    this.source = source;
+    this.target = target;
+    this.heuristic = heuristic;
   }
 
-  private static Path<Double> startIterations(
-          ValueGraph<NodeWithXYCoordinates, Double> graph,
-          TreeSet<AStarNodeWrapper> table,
-          Set<NodeWithXYCoordinates> shortestPathFound,
-          Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers,
-          Function<NodeWithXYCoordinates, Double> heuristic,
-          NodeWithXYCoordinates source,
-          NodeWithXYCoordinates target
-  ) {
+  public Path<Double> findShortestPath() {
+    addSource();
+    return startIterations();
+  }
+
+  private Path<Double> startIterations() {
 
     while (!table.isEmpty()) {
       AStarNodeWrapper nodeWrapper = table.pollFirst();
       NodeWithXYCoordinates node = nodeWrapper.getNode();
-      shortestPathFound.add(node);
+      foundShortestPaths.add(node);
 
       if (node.equals(target)) {
-        return buildPath(nodeWrapper, source.getName(), target.getName());
+        return buildPath(nodeWrapper);
       }
-      iterateOverAllNeighbors(
-              graph, table, shortestPathFound,
-              nodeWrappers, graph.adjacentNodes(node), heuristic, nodeWrapper
-      );
+      iterateOverAllNeighbors(graph.adjacentNodes(node), nodeWrapper);
     }
     return null;
   }
 
-  private static void iterateOverAllNeighbors(
-          ValueGraph<NodeWithXYCoordinates, Double> graph, TreeSet<AStarNodeWrapper> table,
-          Set<NodeWithXYCoordinates> foundShortestPaths,
-          Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers,
+  private void iterateOverAllNeighbors(
           Set<NodeWithXYCoordinates> neighbors,
-          Function<NodeWithXYCoordinates, Double> heuristic, AStarNodeWrapper nodeWrapper
+          AStarNodeWrapper nodeWrapper
   ) {
     NodeWithXYCoordinates node = nodeWrapper.getNode();
+
     for (NodeWithXYCoordinates neighbor : neighbors) {
       if (foundShortestPaths.contains(neighbor)) {
         continue;
       }
+
       double cost = graph.edgeValue(node, neighbor).get();
       double totalCostFromStart = nodeWrapper.getTotalCostFromStart() + cost;
 
       AStarNodeWrapper neighborWrapper = nodeWrappers.get(neighbor);
+
       if (neighborWrapper == null)
-        addNeighborToTable(table, heuristic, nodeWrappers, neighbor, nodeWrapper, totalCostFromStart);
-      else if (totalCostFromStart < neighborWrapper.getTotalCostFromStart()) {
-        updateTotalCostAndPredecessor(table, neighborWrapper, nodeWrapper, totalCostFromStart);
-      }
+        addNeighborToTable(neighbor, nodeWrapper, totalCostFromStart);
+
+      else if (totalCostFromStart < neighborWrapper.getTotalCostFromStart())
+        updateTotalCostAndPredecessor(neighborWrapper, nodeWrapper, totalCostFromStart);
+
     }
   }
 
-  private static void addNeighborToTable(
-          TreeSet<AStarNodeWrapper> table,
-          Function<NodeWithXYCoordinates, Double> heuristic,
-          Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers,
+  private void addNeighborToTable(
           NodeWithXYCoordinates node,
           AStarNodeWrapper predecessor,
           double totalCostFromStart
-
   ) {
+
     AStarNodeWrapper neighborWrapper = new AStarNodeWrapper(
             node, predecessor, totalCostFromStart, heuristic.apply(node)
     );
@@ -87,8 +87,7 @@ public class AStar {
     table.add(neighborWrapper);
   }
 
-  private static void updateTotalCostAndPredecessor(
-          TreeSet<AStarNodeWrapper> table,
+  private void updateTotalCostAndPredecessor(
           AStarNodeWrapper neighborWrapper,
           AStarNodeWrapper predecessor,
           double lowerTotalCostFromStart
@@ -106,20 +105,14 @@ public class AStar {
     table.add(neighborWrapper);
   }
 
-  private static Path<Double> buildPath(AStarNodeWrapper nodeWrapper,
-                                        String source, String destination) {
+  private Path<Double> buildPath(AStarNodeWrapper nodeWrapper) {
     return new Path<>(
-            source, destination,
+            source.getName(), target.getName(),
             nodeWrapper.getTotalCostFromStart(), buildRoute(nodeWrapper)
     );
   }
 
-  private static void addSource(
-          Map<NodeWithXYCoordinates, AStarNodeWrapper> nodeWrappers,
-          TreeSet<AStarNodeWrapper> table,
-          NodeWithXYCoordinates source,
-          Function<NodeWithXYCoordinates, Double> heuristic
-  )
+  private void addSource()
   {
     AStarNodeWrapper sourceWrapper =
             new AStarNodeWrapper(source, null, 0.0, heuristic.apply(source));
@@ -127,7 +120,7 @@ public class AStar {
     table.add(sourceWrapper);
   }
 
-  private static List<String> buildRoute(AStarNodeWrapper target) {
+  private List<String> buildRoute(AStarNodeWrapper target) {
     if (target.getPredecessor() == null)
       return new ArrayList<>();
 

@@ -92,8 +92,9 @@ public class TestWithSampleGraph {
       NodeWithXYCoordinates target) {
     Function<NodeWithXYCoordinates, Double> heuristic =
         new HeuristicForNodesWithXYCoordinates(graph, target);
-    Path<Double> path =
-        AStar.findShortestPath(graph, source, target, heuristic);
+
+    AStar aStar = new AStar(graph, source, target, heuristic);
+    Path<Double> path = aStar.findShortestPath();
     System.out.printf("shortestPath from %s to %s, cost: %f = %s\n", path.getSource(), path.getDestination(), path.getTotalCost(), path.getRoute());
   }
 }
