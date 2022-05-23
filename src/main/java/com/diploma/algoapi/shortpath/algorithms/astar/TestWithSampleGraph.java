@@ -1,5 +1,6 @@
 package com.diploma.algoapi.shortpath.algorithms.astar;
 
+import com.diploma.algoapi.shortpath.algorithms.bellman_ford.Path;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
@@ -36,15 +37,11 @@ import java.util.stream.Collectors;
  */
 public class TestWithSampleGraph {
 
-  private static final Logger LOG =
-      LoggerFactory.getLogger(HeuristicForNodesWithXYCoordinates.class);
-
   public static void main(String[] args) {
     ValueGraph<NodeWithXYCoordinates, Double> graph = createSampleGraph();
 
 
     Map<String, NodeWithXYCoordinates> nodeByName = createNodeByNameMap(graph);
-    //нужна обертка (Path) для определения стоимости пути, сам маршрут
     findAndPrintShortestPath(graph, nodeByName.get("D"), nodeByName.get("H"));
     findAndPrintShortestPath(graph, nodeByName.get("A"), nodeByName.get("F"));
     findAndPrintShortestPath(graph, nodeByName.get("E"), nodeByName.get("H"));
@@ -95,8 +92,8 @@ public class TestWithSampleGraph {
       NodeWithXYCoordinates target) {
     Function<NodeWithXYCoordinates, Double> heuristic =
         new HeuristicForNodesWithXYCoordinates(graph, target);
-    List<NodeWithXYCoordinates> shortestPath =
+    Path<Double> path =
         AStar.findShortestPath(graph, source, target, heuristic);
-    System.out.printf("shortestPath from %s to %s = %s\n", source, target, shortestPath);
+    System.out.printf("shortestPath from %s to %s, cost: %f = %s\n", path.getSource(), path.getDestination(), path.getTotalCost(), path.getRoute());
   }
 }
