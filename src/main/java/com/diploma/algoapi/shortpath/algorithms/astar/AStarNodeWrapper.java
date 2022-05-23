@@ -27,10 +27,25 @@ public class AStarNodeWrapper implements Comparable<AStarNodeWrapper> {
     calculateCostSum();
   }
 
+  @Override
+  public int compareTo(AStarNodeWrapper other) {
+    int compare = Double.compare(this.costSum, other.costSum);
+    if (compare == 0) {
+      compare = node.compareTo(other.node);
+    }
+    return compare;
+  }
+
+  public void setTotalCostFromStart(double totalCostFromStart) {
+    this.totalCostFromStart = totalCostFromStart;
+    calculateCostSum();
+  }
+
   private void calculateCostSum() {
     this.costSum = this.totalCostFromStart + this.minimumRemainingCostToTarget;
   }
 
+  //getters, setters
   public NodeWithXYCoordinates getNode() {
     return node;
   }
@@ -43,42 +58,11 @@ public class AStarNodeWrapper implements Comparable<AStarNodeWrapper> {
     return predecessor;
   }
 
-  public void setTotalCostFromStart(double totalCostFromStart) {
-    this.totalCostFromStart = totalCostFromStart;
-    calculateCostSum();
-  }
+
 
   public double getTotalCostFromStart() {
     return totalCostFromStart;
   }
 
-  @Override
-  public int compareTo(AStarNodeWrapper other) {
-    int compare = Double.compare(this.costSum, other.costSum);
-    if (compare == 0) {
-      compare = node.compareTo(other.node);
-    }
-    return compare;
-  }
 
-  // Not overriding equals() and hashcode(), to use Object's methods.
-  // Object's methods use object identity, which is much faster.
-  // It's sufficient as within the algorithm, we have only one AStarNodeWrapper
-  // instance per node.
-
-  @Override
-  public String toString() {
-    return "AStarNodeWrapperForTreeSet{"
-        + "node="
-        + node
-        + ", predecessor="
-        + (predecessor != null ? predecessor.getNode().toString() : "")
-        + ", totalCostFromStart="
-        + totalCostFromStart
-        + ", minimumRemainingCostToTarget="
-        + minimumRemainingCostToTarget
-        + ", costSum="
-        + costSum
-        + '}';
-  }
 }

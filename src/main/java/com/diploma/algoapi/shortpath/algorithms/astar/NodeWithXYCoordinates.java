@@ -19,17 +19,12 @@ public class NodeWithXYCoordinates implements Comparable<NodeWithXYCoordinates> 
     this.y = y;
   }
 
-  public String getName() {
-    return name;
+  @Override
+  public int compareTo(NodeWithXYCoordinates other) {
+    return name.compareTo(other.name);
   }
 
-  public double getX() {
-    return x;
-  }
-
-  public double getY() {
-    return y;
-  }
+  //getters, equals, hashcode..
 
   @Override
   public boolean equals(Object other) {
@@ -50,13 +45,15 @@ public class NodeWithXYCoordinates implements Comparable<NodeWithXYCoordinates> 
     return name != null ? name.hashCode() : 0;
   }
 
-  @Override
-  public int compareTo(NodeWithXYCoordinates other) {
-    return name.compareTo(other.name);
+  public String getName() {
+    return name;
   }
 
-  @Override
-  public String toString() {
-    return name;
+  public double getX() {
+    return x;
+  }
+
+  public double getY() {
+    return y;
   }
 }

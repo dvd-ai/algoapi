@@ -92,10 +92,6 @@ public class AStar {
           AStarNodeWrapper predecessor,
           double lowerTotalCostFromStart
   )
-  // The position in the TreeSet won't change automatically;
-  // we have to remove and reinsert the node.
-  // Because TreeSet uses compareTo() to identity a node to remove,
-  // we have to remove it *before* we change the cost!
   {
     table.remove(neighborWrapper);
 
@@ -112,13 +108,6 @@ public class AStar {
     );
   }
 
-  private void addSource() {
-    AStarNodeWrapper sourceWrapper =
-            new AStarNodeWrapper(source, null, 0.0, heuristic.apply(source));
-    nodeWrappers.put(source, sourceWrapper);
-    table.add(sourceWrapper);
-  }
-
   private List<String> buildRoute(AStarNodeWrapper target) {
     if (target.getPredecessor() == null)
       return new ArrayList<>();
@@ -130,6 +119,13 @@ public class AStar {
     }
     Collections.reverse(route);
     return route;
+  }
+
+  private void addSource() {
+    AStarNodeWrapper sourceWrapper =
+            new AStarNodeWrapper(source, null, 0.0, heuristic.apply(source));
+    nodeWrappers.put(source, sourceWrapper);
+    table.add(sourceWrapper);
   }
 
 }
