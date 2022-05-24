@@ -4,13 +4,11 @@ import com.diploma.algoapi.shortpath.algorithms.bellman_ford.Path;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 
 /**
  * Tests the implementation of the A* algorithm using the following sample graph:
