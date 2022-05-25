@@ -1,21 +1,18 @@
 package com.diploma.algoapi;
 
 import com.diploma.algoapi.shortpath.algorithms.dijkstra.Dijkstra;
-import com.diploma.algoapi.shortpath.algorithms.dijkstra.Graph;
 import com.diploma.algoapi.shortpath.algorithms.dijkstra.Node;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class AlgoapiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AlgoapiApplication.class, args);
-
-        //https://www.baeldung.com/java-dijkstra
-
-        //https://www.programiz.com/dsa/bellman-ford-algorithm
-        //https://www.happycoders.eu/algorithms/bellman-ford-algorithm-java/
 
         Node nodeA = new Node("A");
         Node nodeB = new Node("B");
@@ -32,26 +29,28 @@ public class AlgoapiApplication {
 
         nodeC.addDestination(nodeE, 10);
 
-        nodeD.addDestination(nodeE, 2);
+        nodeD.addDestination(nodeE, 2);//i'm here
         nodeD.addDestination(nodeF, 1);
 
         nodeF.addDestination(nodeE, 5);
 
-        Graph graph = new Graph();
-
-        graph.addNode(nodeA);
-        graph.addNode(nodeB);
-        graph.addNode(nodeC);
-        graph.addNode(nodeD);
-        graph.addNode(nodeE);
-        graph.addNode(nodeF);
-
-        //validators: sum of all edge weights shouldn't exceed INTEGER_MAX_VALUE
-        //check existence of negative edge weights
+        Set<Node>nodes  = new HashSet<>();
+        nodes.add(nodeA);
+        nodes.add(nodeB);
+        nodes.add(nodeC);
+        nodes.add(nodeD);
+        nodes.add(nodeE);
+        nodes.add(nodeF);
 
         Dijkstra.calculateShortestPathFromSource(nodeA);
-        System.out.println(nodeF.getDistance());
-        nodeF.getShortestPath().forEach(node -> System.out.println(node.getName()));
+//        System.out.println(nodeF.getDistance());
+//        nodeF.getShortestPath().forEach(node -> System.out.println(node.getName()));
+
+//        System.out.println("------------------------");
+//        Dijkstra.buildPaths(nodeA.getName(), nodes).forEach(integerPath -> {
+//            System.out.println("++++++++++++++");
+//            System.out.println("source: " + integerPath.getSource() + " dest: " + integerPath.getDestination() + " cost: " + integerPath.getTotalCost() + " route: " + integerPath.getRoute());
+//        });
 
     }
 

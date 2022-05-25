@@ -44,12 +44,13 @@ public class FloydWarshallMatrices {
    * @return the shortest path from source to destination node, if it exists; an empty optional
    *     otherwise
    */
-  public Optional<List<String>> getPath(String source, String dest) {
+  //update in diploma: optional is gone
+  public List<String> getPath(String source, String dest) {
       int i = nodeNameToIndex.get(source);
       int j = nodeNameToIndex.get(dest);
 
       if (paths[i][j] == -1) {
-            return Optional.empty();
+            return Collections.emptyList();
       }
 
       List<String> path = new ArrayList<>();
@@ -60,7 +61,7 @@ public class FloydWarshallMatrices {
           path.add(nodes[i]);
       }
 
-      return Optional.of(path);
+      return path;
   }
 
   /** Prints the cost and successor matrices to the console. */

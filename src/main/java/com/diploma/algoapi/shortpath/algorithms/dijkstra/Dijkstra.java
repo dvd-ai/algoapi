@@ -1,9 +1,9 @@
 package com.diploma.algoapi.shortpath.algorithms.dijkstra;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import com.diploma.algoapi.shortpath.algorithms.bellman_ford.Path;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Dijkstra {
 
@@ -53,5 +53,24 @@ public class Dijkstra {
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
         }
+    }
+
+    //notice in diploma
+    public static List<Path<Integer>> buildPaths(String source, Map<String, Node>nodes) {
+        List<Path<Integer>> paths = new ArrayList<>();
+        for (Map.Entry<String, Node> node : nodes.entrySet()) {
+            paths.add(new Path<>(source, node.getKey(), node.getValue().getDistance(), buildRoute(node.getValue())));
+        }
+        return paths;
+    }
+
+    //notice in diploma
+    private static List<String> buildRoute(Node node) {
+        List<String>route = node.getShortestPath()
+                .stream()
+                .map(Node::getName)
+                .collect(Collectors.toList());
+        route.add(node.getName());
+        return route;
     }
 }
