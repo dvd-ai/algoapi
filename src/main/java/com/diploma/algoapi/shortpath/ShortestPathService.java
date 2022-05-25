@@ -1,5 +1,9 @@
 package com.diploma.algoapi.shortpath;
 
+import com.diploma.algoapi.shortpath.algorithms.astar.AStar;
+import com.diploma.algoapi.shortpath.algorithms.astar.HeuristicForNodesWithXYCoordinates;
+import com.diploma.algoapi.shortpath.algorithms.astar.NodeWithXYCoordinates;
+import com.diploma.algoapi.shortpath.algorithms.bellman_ford.BellmanFord;
 import com.diploma.algoapi.shortpath.algorithms.bellman_ford.Path;
 import com.diploma.algoapi.shortpath.algorithms.dijkstra.Dijkstra;
 import com.diploma.algoapi.shortpath.algorithms.dijkstra.Node;
@@ -24,42 +28,49 @@ public class ShortestPathService {
     }
 
     public PathsDto floyd(GraphDto graphDto) {
-        ValueGraph<String, Integer> graph = createGraph(graphDto);
+        ValueGraph<String, Integer> graph = createGraph(graphDto.edges());
         FloydWarshallMatrices floydWarshallMatrices = FloydWarshall.findShortestPaths(graph);
         return new PathsDto(getAllPairsPaths(floydWarshallMatrices, graph.nodes()));
     }
 
-    private List<Path<Integer>> getAllPairsPaths(
-            FloydWarshallMatrices floydWarshallMatrices,
-            Set<String> nodes
-    ) {
-        List<Path<Integer>> paths = new LinkedList<>();
+    public PathsDto ford(GraphDto graphDto, String source) {
+        ValueGraph<String, Integer> graph = createGraph(graphDto.edges());
+        return new PathsDto(BellmanFord.findShortestPath(graph, source));
+    }
 
-        for (String source : nodes) {
-            for (String destination : nodes) {
-                paths.add(
-                        new Path<>(
-                            source, destination,
-                            floydWarshallMatrices.getDistance(source, destination),
-                            floydWarshallMatrices.getPath(source, destination)
+    public SinglePathDto aStar(GraphXYDto graphXYDto, String sourceName, String destinationName) {
+        Map<String, NodeWithXYCoordinates>nodes = getUniqueXYNodes(graphXYDto.nodesXY());
+        ValueGraph<NodeWithXYCoordinates, Double> graph = createGraphXY(graphXYDto.edgesXY(), nodes);
+
+        NodeWithXYCoordinates source = nodes.get(sourceName);
+        NodeWithXYCoordinates destination = nodes.get(destinationName);
+
+        return new SinglePathDto(
+                new AStar(
+                    graph, source, destination,
+                    new HeuristicForNodesWithXYCoordinates(graph, destination)
+                ).findShortestPath()
+        );
+    }
+
+    private ValueGraph<NodeWithXYCoordinates, Double> createGraphXY(
+            List<EdgeXY>edgesXY, Map<String, NodeWithXYCoordinates>nodes
+    ) {
+
+        MutableValueGraph<NodeWithXYCoordinates, Double> graph = ValueGraphBuilder.undirected().build();
+        edgesXY
+                .forEach(
+                        edge -> graph.putEdgeValue(
+                                nodes.get(edge.startVertexName()),
+                                nodes.get(edge.endVertexName()), edge.value()
                         )
                 );
-            }
-        }
-        return paths;
+        return graph;
     }
 
-    public PathsDto ford(GraphDto graphDto, String source) {
-        return new PathsDto(null);
-    }
-
-    public SinglePathDto aStar(GraphXYDto graphXYDto, String source, String destination) {
-        return new SinglePathDto(null);
-    }
-
-    private ValueGraph<String, Integer> createGraph(GraphDto graphDto) {
+    private ValueGraph<String, Integer> createGraph(List<Edge>edges) {
         MutableValueGraph<String, Integer> graph = ValueGraphBuilder.directed().build();
-        graphDto.edges()
+        edges
                 .forEach(
                         edge -> graph.putEdgeValue(
                                 edge.startVertexName(), edge.endVertexName(), edge.value()
@@ -94,4 +105,32 @@ public class ShortestPathService {
                 }
         );
     }
+
+    private Map<String, NodeWithXYCoordinates> getUniqueXYNodes(List<NodeWithXYCoordinates> nodesXY) {
+        Map<String, NodeWithXYCoordinates> nodes = new HashMap<>();
+        Set<NodeWithXYCoordinates> uniqueNodes = new HashSet<>(nodesXY);
+        uniqueNodes.forEach(node -> nodes.put(node.getName(), node));
+        return nodes;
+    }
+
+    private List<Path<Integer>> getAllPairsPaths(
+            FloydWarshallMatrices floydWarshallMatrices,
+            Set<String> nodes
+    ) {
+        List<Path<Integer>> paths = new LinkedList<>();
+
+        for (String source : nodes) {
+            for (String destination : nodes) {
+                paths.add(
+                        new Path<>(
+                                source, destination,
+                                floydWarshallMatrices.getDistance(source, destination),
+                                floydWarshallMatrices.getPath(source, destination)
+                        )
+                );
+            }
+        }
+        return paths;
+    }
+
 }

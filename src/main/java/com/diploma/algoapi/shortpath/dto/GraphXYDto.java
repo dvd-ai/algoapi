@@ -4,9 +4,9 @@ import com.diploma.algoapi.shortpath.algorithms.astar.NodeWithXYCoordinates;
 
 import java.util.List;
 
-public record GraphXYDto (
+public record GraphXYDto(
         List<NodeWithXYCoordinates> nodesXY,
-        List<Edge>edges
-){
-
+        List<EdgeXY> edgesXY
+)
+{
 }
