@@ -20,37 +20,37 @@ import java.util.*;
 @Service
 public class ShortestPathService {
 
-    public PathsDto dijkstra(GraphDto graphDto, String source) {
+    public List<Path<Integer>> dijkstra(GraphDto graphDto, String source) {
         Map<String, Node> nodes = new HashMap<>();
         initNodes(graphDto.edges(), nodes);
         Dijkstra.calculateShortestPathFromSource(nodes.get(source));
-        return new PathsDto(Dijkstra.buildPaths(source, nodes));
+        return Dijkstra.buildPaths(source, nodes);
     }
 
-    public PathsDto floyd(GraphDto graphDto) {
+    public List<Path<Integer>> floyd(GraphDto graphDto) {
         ValueGraph<String, Integer> graph = createGraph(graphDto.edges());
         FloydWarshallMatrices floydWarshallMatrices = FloydWarshall.findShortestPaths(graph);
-        return new PathsDto(getAllPairsPaths(floydWarshallMatrices, graph.nodes()));
+        return getAllPairsPaths(floydWarshallMatrices, graph.nodes());
     }
 
-    public PathsDto ford(GraphDto graphDto, String source) {
+    public List<Path<Integer>> ford(GraphDto graphDto, String source) {
         ValueGraph<String, Integer> graph = createGraph(graphDto.edges());
-        return new PathsDto(BellmanFord.findShortestPath(graph, source));
+        return BellmanFord.findShortestPath(graph, source);
     }
 
-    public SinglePathDto aStar(GraphXYDto graphXYDto, String sourceName, String destinationName) {
+    public Path<Double> aStar(GraphXYDto graphXYDto, String sourceName, String destinationName) {
         Map<String, NodeWithXYCoordinates>nodes = getUniqueXYNodes(graphXYDto.nodesXY());
         ValueGraph<NodeWithXYCoordinates, Double> graph = createGraphXY(graphXYDto.edgesXY(), nodes);
 
         NodeWithXYCoordinates source = nodes.get(sourceName);
         NodeWithXYCoordinates destination = nodes.get(destinationName);
-
-        return new SinglePathDto(
+        return
+//        return new SinglePathDto(
                 new AStar(
                     graph, source, destination,
                     new HeuristicForNodesWithXYCoordinates(graph, destination)
-                ).findShortestPath()
-        );
+                ).findShortestPath();
+//        );
     }
 
     private ValueGraph<NodeWithXYCoordinates, Double> createGraphXY(
