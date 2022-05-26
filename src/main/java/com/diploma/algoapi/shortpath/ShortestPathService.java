@@ -44,13 +44,10 @@ public class ShortestPathService {
 
         NodeWithXYCoordinates source = nodes.get(sourceName);
         NodeWithXYCoordinates destination = nodes.get(destinationName);
-        return
-//        return new SinglePathDto(
-                new AStar(
-                    graph, source, destination,
-                    new HeuristicForNodesWithXYCoordinates(graph, destination)
-                ).findShortestPath();
-//        );
+        return new AStar(
+                graph, source, destination,
+                new HeuristicForNodesWithXYCoordinates(graph, destination)
+        ).findShortestPath();
     }
 
     private ValueGraph<NodeWithXYCoordinates, Double> createGraphXY(
