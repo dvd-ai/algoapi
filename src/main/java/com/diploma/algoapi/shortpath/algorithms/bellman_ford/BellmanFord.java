@@ -67,7 +67,7 @@ public class BellmanFord {
 
   private static List<String> buildRoute(NodeWrapper target) {
     if (target.getPredecessor() == null)
-      return new ArrayList<>();
+      return Collections.emptyList();
 
     List<String> route = new ArrayList<>();
     while (target != null) {

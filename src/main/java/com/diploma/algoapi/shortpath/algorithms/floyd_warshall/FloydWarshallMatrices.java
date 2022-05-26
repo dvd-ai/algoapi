@@ -44,7 +44,6 @@ public class FloydWarshallMatrices {
    * @return the shortest path from source to destination node, if it exists; an empty optional
    *     otherwise
    */
-  //update in diploma: optional is gone
   public List<String> getPath(String source, String dest) {
       int i = nodeNameToIndex.get(source);
       int j = nodeNameToIndex.get(dest);

@@ -55,7 +55,6 @@ public class Dijkstra {
         }
     }
 
-    //notice in diploma
     public static List<Path<Integer>> buildPaths(String source, Map<String, Node>nodes) {
         List<Path<Integer>> paths = new ArrayList<>();
         for (Map.Entry<String, Node> node : nodes.entrySet()) {
@@ -64,7 +63,6 @@ public class Dijkstra {
         return paths;
     }
 
-    //notice in diploma
     private static List<String> buildRoute(Node node) {
         List<String>route = node.getShortestPath()
                 .stream()
