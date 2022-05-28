@@ -6,7 +6,7 @@ import java.util.List;
 
 public record GraphXYDto(
         List<NodeWithXYCoordinates> nodesXY,
-        List<EdgeXY> edgesXY
+        List<Edge<Double>> edges
 )
 {
 }

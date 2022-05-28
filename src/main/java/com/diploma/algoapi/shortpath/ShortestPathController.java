@@ -32,9 +32,7 @@ public class ShortestPathController {
     }
 
     @PostMapping("/a-star")
-    public Path<Double> aStar(
-            @RequestBody GraphXYDto graphXYDto,
-            @RequestParam String source,
+    public Path<Double> aStar(@RequestBody GraphXYDto graphXYDto, @RequestParam String source,
             @RequestParam String destination
     ) {
         return shortestPathService.aStar(graphXYDto, source, destination);

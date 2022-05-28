@@ -40,22 +40,23 @@ public class ShortestPathService {
 
     public Path<Double> aStar(GraphXYDto graphXYDto, String sourceName, String destinationName) {
         Map<String, NodeWithXYCoordinates>nodes = getUniqueXYNodes(graphXYDto.nodesXY());
-        ValueGraph<NodeWithXYCoordinates, Double> graph = createGraphXY(graphXYDto.edgesXY(), nodes);
+        ValueGraph<NodeWithXYCoordinates, Double> graph = createGraphXY(graphXYDto.edges(), nodes);
 
         NodeWithXYCoordinates source = nodes.get(sourceName);
         NodeWithXYCoordinates destination = nodes.get(destinationName);
+
         return new AStar(
-                graph, source, destination,
-                new HeuristicForNodesWithXYCoordinates(graph, destination)
+                graph, source,
+                destination, new HeuristicForNodesWithXYCoordinates(graph, destination)
         ).findShortestPath();
     }
 
     private ValueGraph<NodeWithXYCoordinates, Double> createGraphXY(
-            List<EdgeXY>edgesXY, Map<String, NodeWithXYCoordinates>nodes
+            List<Edge<Double>>edges, Map<String, NodeWithXYCoordinates>nodes
     ) {
 
         MutableValueGraph<NodeWithXYCoordinates, Double> graph = ValueGraphBuilder.undirected().build();
-        edgesXY
+        edges
                 .forEach(
                         edge -> graph.putEdgeValue(
                                 nodes.get(edge.startVertexName()),
@@ -65,7 +66,7 @@ public class ShortestPathService {
         return graph;
     }
 
-    private ValueGraph<String, Integer> createGraph(List<Edge>edges) {
+    private ValueGraph<String, Integer> createGraph(List<Edge<Integer>>edges) {
         MutableValueGraph<String, Integer> graph = ValueGraphBuilder.directed().build();
         edges
                 .forEach(
@@ -76,12 +77,12 @@ public class ShortestPathService {
         return graph;
     }
 
-    private void initNodes(List<Edge> edges, Map<String, Node>nodes) {
+    private void initNodes(List<Edge<Integer>> edges, Map<String, Node>nodes) {
         setUniqueNodes(edges, nodes);
         setDistances(edges, nodes);
     }
 
-    private void setDistances(List<Edge> edges, Map<String, Node>nodes) {
+    private void setDistances(List<Edge<Integer>> edges, Map<String, Node>nodes) {
         edges.forEach(
                 edge -> {
                     Node startNode = nodes.get(edge.startVertexName());
@@ -91,7 +92,7 @@ public class ShortestPathService {
         );
     }
 
-    private void setUniqueNodes(List<Edge> edges, Map<String, Node>nodes) {
+    private void setUniqueNodes(List<Edge<Integer>> edges, Map<String, Node>nodes) {
         edges.forEach(
                 edge -> {
                     Node start = new Node(edge.startVertexName());

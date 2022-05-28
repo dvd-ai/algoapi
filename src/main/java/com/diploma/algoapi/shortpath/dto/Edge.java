@@ -1,8 +1,8 @@
 package com.diploma.algoapi.shortpath.dto;
 
-public record Edge (
+public record Edge<N>(
         String startVertexName,
         String endVertexName,
-        Integer value
+        N value
 ){
 }
